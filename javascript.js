@@ -8,36 +8,42 @@ var temperature;
 var humidity;
 var windSpeed;
 var uvIndex;
+var currentWeatherPanel = $('<div>').attr('id', 'currentWeatherPanel');
+
+var weatherStorage;
+var recentArray = [];
+var searchHistory;
+var fiveDayForecast;
+
+var fiveDayDate;
+var fiveDayIcon;
+var fiveDayTemp;
+var fiveDayHumidity;
+var fiveDayPanel = $('<div>').attr('id', 'fiveDayPanel');
+
 var apiKey = 'ec1796913324d783d602ea29df8ec9d9';
 //search bar and search history
 var searchForm = $('<form>').attr('id', 'searchForm');
 var citySearch = $('<input>').attr('type', 'text').attr('id', 'citySearch');
 var citySearchLabel = $('<label>').attr('for', 'citySearch').text('Search for a city');
 var searchBtn = $('<button>').attr('id', 'searchBtn').text('search');
-$('body').append(searchForm);
-searchForm.append(citySearch, citySearchLabel, searchBtn);
+var clearHistoryBtn = $('<button>').attr('id', 'clearHistoryBtn').text('Clear history');
+searchForm.append(citySearch, citySearchLabel, searchBtn, clearHistoryBtn);
 
-// clicking on history item executes new search
+var recentHistoryPanel = $('<div>').attr('id', 'recentHistoryPanel');
+var recentHeader = $('<h2>').text('Recent Searches');
+var recentUl = $('<ul>');
+recentHistoryPanel.append(recentHeader, recentUl);
 
-// 5 day forecast function
+$('body').append(searchForm, recentHistoryPanel, currentWeatherPanel, fiveDayPanel);
 
-// search history function
 
-// current conditions function
-
-// uv index function
-
-// multiple ajax calls
-
-// local storage
-
-// Get an API Key from OpenWeatherMap API
 function uvIndex() {
     $.ajax({
         url: uvIndUrl,
         method: 'GET'
     }).then(function(response) {
-        console.log('uvInd: ', response);
+        // console.log('uvInd: ', response);
     });
 }
 function currentWeather(weatherLocation) {
@@ -46,11 +52,12 @@ function currentWeather(weatherLocation) {
         url: currentWeather,
         method: 'GET'
     }).then(function(response) {
-        console.log('current weather: ', response);
+        // console.log('current weather: ', response);
         lat = response.coord.lat;
         lon = response.coord.lon;
-        uvIndUrl= `http://api.openweathermap.org/data/2.5/uvi?appid=${apiKey}&lat=${lat}&lon=${lon}`;
+        uvIndUrl= `https://api.openweathermap.org/data/2.5/uvi?appid=${apiKey}&lat=${lat}&lon=${lon}`;
         uvIndex();
+        populateCurrentWeather(response);
     });
 }
 function fiveDay(weatherLocation) {
@@ -60,12 +67,84 @@ function fiveDay(weatherLocation) {
         method: 'GET'
     }).then(function(response) {
         console.log('five day: ', response);
+        populateFiveDay(response);
     });
 }
+function storage(storageItem) {
+    if (localStorage.weather) {
+        recentArray = JSON.parse(localStorage.weather);
+    }
+    if (recentArray.indexOf(storageItem) === -1 ) {
+        recentArray.push(storageItem);
+        localStorage.setItem('weather', JSON.stringify(recentArray));
+    } else ('already in array')
+}
+function clearHistory() {
+    weatherStorage = JSON.parse(localStorage.weather);
+    recentArray = [];
+    localStorage.setItem('weather', JSON.stringify(recentArray));
+    populateHistory();
+}
+function populateHistory() {
+    recentUl.html('');
+    if(localStorage.weather) {
+        weatherStorage = JSON.parse(localStorage.weather);
+        weatherStorage.forEach( function(item) {
+            recentUl.prepend($('<li>').attr('class', 'searchResult').text(item));
+        });
+    }
+}
+populateHistory();
+function toF(kelvin) {
+    return (((kelvin - 273.15) * (9/5)) + 32).toFixed(0);
+}
+function populateCurrentWeather(response) {
+    currentWeatherPanel.html('');
+    var iconPath = `http://openweathermap.org/img/wn/${response.weather[0].icon}.png`;
+    city = $('<h2>').text(response.name);
+    date = $('<p>').text(`Need variable for today's date`);
+    iconImg = $('<img>').attr('src', iconPath).attr('alt', response.weather[0].description);
+    temperature = $('<h3>').attr('class', 'currentTemp').text(toF(response.main.temp));
+    maxTemp = $('<p>').text(`hi: ${toF(response.main.temp_max)}`);
+    minTemp = $('<p>').text(`lo: ${toF(response.main.temp_min)}`);
+    humidity = $('<p>').text(`humidity: ${response.main.humidity}%`);
+    // need variable to convert degree to direction
+    windSpeed = $('<p>').text(`wind: ${response.wind.speed}`);
 
-searchBtn.on('click', event=>{
-    event.preventDefault();
-    var weatherLocation = citySearch.val();
+    currentWeatherPanel.append(city, date, iconImg, temperature, maxTemp, minTemp, humidity, windSpeed);
+    
+}
+function populateUvIndex() {
+    // uvIndex;
+}
+function populateFiveDay(response) {
+    console.log('five day');
+    
+    fiveDayDate;
+    fiveDayIcon;
+    fiveDayTemp;
+    fiveDayHumidity;
+}
+function doItAll(weatherLocation) {
     currentWeather(weatherLocation);
     fiveDay(weatherLocation);
+    storage(weatherLocation);
+    populateHistory();
+    citySearch.val('');
+}
+//buttons
+
+$(document).on('click', '#searchBtn', function(event){
+    event.preventDefault();
+    var weatherLocation = citySearch.val().toLowerCase();
+    doItAll(weatherLocation);
 })
+$(document).on('click', '.searchResult', function(event){
+    var weatherLocation = $(this).text();
+    doItAll(weatherLocation);
+})
+$(document).on('click', '#clearHistoryBtn', function(event){
+    event.preventDefault();
+    clearHistory();
+})
+
