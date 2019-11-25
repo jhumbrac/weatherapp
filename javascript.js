@@ -19,6 +19,9 @@ var fiveDayDate;
 var fiveDayIcon;
 var fiveDayTemp;
 var fiveDayHumidity;
+var fiveDayArray = [];
+var fiveDayHeader = $('<h3>').text('Five day forecast');
+var fiveDayPlot = $('<div>').attr('id', 'fiveDayPlot');
 var fiveDayPanel = $('<div>').attr('id', 'fiveDayPanel');
 
 var apiKey = 'ec1796913324d783d602ea29df8ec9d9';
@@ -100,10 +103,11 @@ function toF(kelvin) {
 }
 function populateCurrentWeather(response) {
     currentWeatherPanel.html('');
-    var iconPath = `http://openweathermap.org/img/wn/${response.weather[0].icon}.png`;
+    var iconPath = `images/icons/${response.weather[0].icon}.svg`;
     city = $('<h2>').text(response.name);
     date = $('<p>').text(`Need variable for today's date`);
-    iconImg = $('<img>').attr('src', iconPath).attr('alt', response.weather[0].description);
+    //iconImg = $('<img>').attr('src', iconPath).attr('alt', response.weather[0].description);
+    iconImg = $('<div>').load(iconPath);
     temperature = $('<h3>').attr('class', 'currentTemp').text(toF(response.main.temp));
     maxTemp = $('<p>').text(`hi: ${toF(response.main.temp_max)}`);
     minTemp = $('<p>').text(`lo: ${toF(response.main.temp_min)}`);
@@ -118,8 +122,24 @@ function populateUvIndex() {
     // uvIndex;
 }
 function populateFiveDay(response) {
-    console.log('five day');
+    //fiveDayPanel.html('');
+    fiveDayArray = response.list;
+    var trace1 = {
+        x: [],
+        y: [],
+        type: 'scatter',
+    };
+    var data = [trace1];
+    console.log(fiveDayArray);
+    fiveDayArray.forEach(function(item){
+        trace1.y.push(toF(item.main.temp));
+        trace1.x.push(item.dt_txt);
+    })
+    fiveDayPanel.append(fiveDayHeader, fiveDayPlot);
+    Plotly.newPlot('fiveDayPlot', data);
     
+
+
     fiveDayDate;
     fiveDayIcon;
     fiveDayTemp;
