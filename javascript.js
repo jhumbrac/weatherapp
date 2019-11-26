@@ -117,8 +117,8 @@ function populateCurrentWeather(response) {
     var iconPath = `images/icons/${response.weather[0].icon}.svg`;
     city = $('<h2>').text(response.name);
     date = $('<p>').attr('id', 'currentDate');
-    iconImg = $('<img>').attr('src', iconPath).attr('alt', response.weather[0].description);
-    //iconImg = $('<div>').load(iconPath);
+    //iconImg = $('<img>').attr('src', iconPath).attr('alt', response.weather[0].description);
+    iconImg = $('<div>').load(iconPath);
     tempBlock = $('<div>').attr('id', 'tempBlock');
     temperature = $('<h3>').attr('class', 'currentTemp').html('&deg;F').prepend($('<span>').text(toF(response.main.temp)));
     maxTemp = $('<p>').html(`hi: <b>${toF(response.main.temp_max)}</b>`);
