@@ -42,7 +42,7 @@ input:focus, label:focus, button:focus {
     outline:none;
 }
 #searchBar {
-    background: #747474;
+    background: #888888;
     border-radius: .25em;
     position: sticky;
     top:1em;
@@ -54,6 +54,7 @@ input:focus, label:focus, button:focus {
     width:100%;
 }
 #searchBar label {
+    color:black;
     cursor: text;
     position:absolute;
     top:50%;
@@ -73,9 +74,6 @@ input:focus, label:focus, button:focus {
     height:100%;
     width:4em;
     z-index: 1;
-}
-#recentHistoryPanel {
-    display:none;
 }
 /* removed unwanted plotly styles */
 svg.main-svg {
@@ -124,6 +122,27 @@ svg {
 .currentTemp {
     font-size: 2em;
 }
+.searchResult {
+    cursor: pointer;
+    list-style: none;
+    background: #14a76c;
+    border-radius:.25em;
+    color: black;
+    padding: 1em;
+    margin: .5em 0;
+    text-transform:capitalize;
+}
+#clearHistoryBtn {
+    background: black;
+    color: #888;
+    border: none;
+    display: inline-block;
+    margin: 1em 0;
+    padding: .5em 1em;
+}
+#recentHistoryPanel {
+    margin-top: 2em;
+}
 #tempBlock p {
     display: inline-block;
     font-size:1.5em;
@@ -132,7 +151,30 @@ svg {
 #tempBlock {
     margin-bottom: 1em;
 }
-
+#fiveDayPanel, #recentHistoryPanel, #currentWeatherPanel {
+    display: none;
+    opacity:0;
+}
+.fiveDay #fiveDayPanel, .recentHistory #recentHistoryPanel, .current #currentWeatherPanel {
+    display:block;
+    opacity:1;
+}
+#options {
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+}
+#options button {
+    background: #888;
+    float:left;
+    padding:.5em;
+    text-align:center;
+    width:33.33%;
+}
+.fiveDay #fiveDayOption, .recentHistory #recentOption, .current #currentOption {
+    background:blue;
+}
 .clearfix:after {
     content:'';
     clear:both;

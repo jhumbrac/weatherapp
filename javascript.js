@@ -41,8 +41,13 @@ var recentHeader = $('<h2>').text('Recent Searches');
 var recentUl = $('<ul>');
 recentHistoryPanel.append(recentHeader, clearHistoryBtn, recentUl);
 
-$('.wrapper').append(searchBar, recentHistoryPanel, currentWeatherPanel, fiveDayPanel);
+var options = $('<div>').attr('id', 'options');
+var fiveDayOption = $('<button>').attr('id', 'fiveDayOption').text('Five day forecast');
+var currentOption = $('<button>').attr('id', 'currentOption').text('Current weather');
+var recentOption = $('<button>').attr('id', 'recentOption').text('Recent search');
+options.append(fiveDayOption, currentOption, recentOption);
 
+$('.wrapper').append(searchBar, recentHistoryPanel, currentWeatherPanel, fiveDayPanel, options);
 
 function getUvIndex() {
     $.ajax({
@@ -167,13 +172,27 @@ $(document).on('click', '#searchBtn', function(event){
     event.preventDefault();
     var weatherLocation = citySearch.val().toLowerCase();
     doItAll(weatherLocation);
+    $('body').attr('class', 'current');
 })
 $(document).on('click', '.searchResult', function(event){
     var weatherLocation = $(this).text();
     doItAll(weatherLocation);
+    $('body').attr('class', 'current');
 })
 $(document).on('click', '#clearHistoryBtn', function(event){
     event.preventDefault();
     clearHistory();
+})
+$(document).on('click', '#fiveDayOption', function(event){
+    event.preventDefault();
+    $('body').attr('class', 'fiveDay');
+})
+$(document).on('click', '#recentOption', function(event){
+    event.preventDefault();
+    $('body').attr('class', 'recentHistory');
+})
+$(document).on('click', '#currentOption', function(event){
+    event.preventDefault();
+    $('body').attr('class', 'current');
 })
 
