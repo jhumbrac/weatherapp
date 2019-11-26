@@ -76,6 +76,13 @@ input:focus, label:focus, button:focus {
     z-index: 1;
 }
 /* removed unwanted plotly styles */
+.svg-container, .main-svg {
+    width: 100% !important;
+}
+.plot-container {
+    position: relative;
+    left: -1.75em;
+}
 svg.main-svg {
     background: none !important;
 }
