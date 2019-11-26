@@ -27,6 +27,11 @@ body {
     min-height: 100vh;
     padding: 1em;
 }
+.wrapper {
+    max-width:600px;
+    margin:auto;
+    text-align: center;
+}
 input, label, button {
     font:inherit;
 }
@@ -37,7 +42,7 @@ input:focus, label:focus, button:focus {
     outline:none;
 }
 #searchBar {
-    background: #fff;
+    background: #747474;
     border-radius: .25em;
     position: sticky;
     top:1em;
@@ -56,13 +61,10 @@ input:focus, label:focus, button:focus {
     transform:translateY(-50%);
 }
 #searchBar input:focus + label, #searchBar input:valid + label {
-    /*color:orange;
-    font-size:.75em;
-    top:1em; */
     color:rgba(0,0,0,0);
 }
 #searchBar button {
-    background: #fff;
+    background: #747474;
     border:none;
     border-radius: .25em;
     position:absolute;
@@ -93,14 +95,25 @@ svg {
     fill: inherit;
 }
 #currentWeatherPanel {
-    margin-top:2em;
+    margin: 2em 0;
+    text-align: center;
 }
 #currentWeatherPanel h2 {
-    font-size:4em;
+    font-size: 3em;
+}
+#currentWeatherPanel > p {
+    display:inline-block;
+    margin:0 1em;
 }
 #currentWeatherPanel div, #currentWeatherPanel img {
-    fill: #14a76c;
-    width: 10em;
+    display: block;
+    color: #ff652f;
+    fill: #ff652f;
+    max-width: 10em;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    font-size: 1.5em;
 }
 .currentTemp span {
     font-size: 4em;
@@ -111,7 +124,14 @@ svg {
 .currentTemp {
     font-size: 2em;
 }
-
+#tempBlock p {
+    display: inline-block;
+    font-size:1.5em;
+    margin-right: .5em;
+}
+#tempBlock {
+    margin-bottom: 1em;
+}
 
 .clearfix:after {
     content:'';
@@ -133,7 +153,7 @@ svg {
 }
 .colors span {
     float:left;
-    height:4em;
+    height: 1em;
     width:20%;
 }
 .colors span:nth-of-type(1) {

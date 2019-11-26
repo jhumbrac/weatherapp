@@ -4,7 +4,10 @@
 var city;
 var date;
 var iconImg;
+var tempBlock;
 var temperature;
+var maxTemp;
+var minTemp;
 var humidity;
 var windSpeed;
 var uvIndex;
@@ -38,15 +41,17 @@ var recentHeader = $('<h2>').text('Recent Searches');
 var recentUl = $('<ul>');
 recentHistoryPanel.append(recentHeader, clearHistoryBtn, recentUl);
 
-$('body').append(searchBar, recentHistoryPanel, currentWeatherPanel, fiveDayPanel);
+$('.wrapper').append(searchBar, recentHistoryPanel, currentWeatherPanel, fiveDayPanel);
 
 
-function uvIndex() {
+function getUvIndex() {
     $.ajax({
         url: uvIndUrl,
         method: 'GET'
     }).then(function(response) {
-        // console.log('uvInd: ', response);
+        console.log('uvInd: ', response);
+        $('#currentDate').text(response.date_iso);
+        uvIndex.html(`UV Index: <b>${response.value}</b>`);
     });
 }
 function currentWeather(weatherLocation) {
@@ -59,7 +64,7 @@ function currentWeather(weatherLocation) {
         lat = response.coord.lat;
         lon = response.coord.lon;
         uvIndUrl= `https://api.openweathermap.org/data/2.5/uvi?appid=${apiKey}&lat=${lat}&lon=${lon}`;
-        uvIndex();
+        getUvIndex();
         populateCurrentWeather(response);
         console.log(response);
     });
@@ -106,17 +111,20 @@ function populateCurrentWeather(response) {
     currentWeatherPanel.html('');
     var iconPath = `images/icons/${response.weather[0].icon}.svg`;
     city = $('<h2>').text(response.name);
-    date = $('<p>').text(`Need variable for today's date`);
+    date = $('<p>').attr('id', 'currentDate');
     iconImg = $('<img>').attr('src', iconPath).attr('alt', response.weather[0].description);
     //iconImg = $('<div>').load(iconPath);
+    tempBlock = $('<div>').attr('id', 'tempBlock');
     temperature = $('<h3>').attr('class', 'currentTemp').html('&deg;F').prepend($('<span>').text(toF(response.main.temp)));
-    maxTemp = $('<p>').text(`hi: ${toF(response.main.temp_max)}`);
-    minTemp = $('<p>').text(`lo: ${toF(response.main.temp_min)}`);
-    humidity = $('<p>').text(`humidity: ${response.main.humidity}%`);
+    maxTemp = $('<p>').html(`hi: <b>${toF(response.main.temp_max)}</b>`);
+    minTemp = $('<p>').html(`lo: <b>${toF(response.main.temp_min)}</b>`);
+    humidity = $('<p>').html(`humidity: <b>${response.main.humidity}%</b>`);
+    uvIndex = $('<p>');
     // need variable to convert degree to direction
-    windSpeed = $('<p>').text(`wind: ${response.wind.speed}`);
+    windSpeed = $('<p>').html(`wind: <b>${response.wind.speed}</b>`);
 
-    currentWeatherPanel.append(city, date, iconImg, temperature, maxTemp, minTemp, humidity, windSpeed);
+    tempBlock.append(temperature, maxTemp, minTemp);
+    currentWeatherPanel.append(city, date, iconImg, tempBlock, humidity, windSpeed, uvIndex);
     
 }
 function populateUvIndex() {
