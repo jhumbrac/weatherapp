@@ -26,19 +26,19 @@ var fiveDayPanel = $('<div>').attr('id', 'fiveDayPanel');
 
 var apiKey = 'ec1796913324d783d602ea29df8ec9d9';
 //search bar and search history
-var searchForm = $('<form>').attr('id', 'searchForm');
-var citySearch = $('<input>').attr('type', 'text').attr('id', 'citySearch');
+var searchBar = $('<form>').attr('id', 'searchBar');
+var citySearch = $('<input>').attr('type', 'search').attr('id', 'citySearch').attr('required', 'required');
 var citySearchLabel = $('<label>').attr('for', 'citySearch').text('Search for a city');
-var searchBtn = $('<button>').attr('id', 'searchBtn').text('search');
+var searchBtn = $('<button>').attr('id', 'searchBtn').html($('<img>').attr('src', 'images/magnifying-glass.svg'));
 var clearHistoryBtn = $('<button>').attr('id', 'clearHistoryBtn').text('Clear history');
-searchForm.append(citySearch, citySearchLabel, searchBtn, clearHistoryBtn);
+searchBar.append(citySearch, citySearchLabel, searchBtn);
 
 var recentHistoryPanel = $('<div>').attr('id', 'recentHistoryPanel');
 var recentHeader = $('<h2>').text('Recent Searches');
 var recentUl = $('<ul>');
-recentHistoryPanel.append(recentHeader, recentUl);
+recentHistoryPanel.append(recentHeader, clearHistoryBtn, recentUl);
 
-$('body').append(searchForm, recentHistoryPanel, currentWeatherPanel, fiveDayPanel);
+$('body').append(searchBar, recentHistoryPanel, currentWeatherPanel, fiveDayPanel);
 
 
 function uvIndex() {
@@ -61,6 +61,7 @@ function currentWeather(weatherLocation) {
         uvIndUrl= `https://api.openweathermap.org/data/2.5/uvi?appid=${apiKey}&lat=${lat}&lon=${lon}`;
         uvIndex();
         populateCurrentWeather(response);
+        console.log(response);
     });
 }
 function fiveDay(weatherLocation) {
@@ -106,9 +107,9 @@ function populateCurrentWeather(response) {
     var iconPath = `images/icons/${response.weather[0].icon}.svg`;
     city = $('<h2>').text(response.name);
     date = $('<p>').text(`Need variable for today's date`);
-    //iconImg = $('<img>').attr('src', iconPath).attr('alt', response.weather[0].description);
-    iconImg = $('<div>').load(iconPath);
-    temperature = $('<h3>').attr('class', 'currentTemp').text(toF(response.main.temp));
+    iconImg = $('<img>').attr('src', iconPath).attr('alt', response.weather[0].description);
+    //iconImg = $('<div>').load(iconPath);
+    temperature = $('<h3>').attr('class', 'currentTemp').html('&deg;F').prepend($('<span>').text(toF(response.main.temp)));
     maxTemp = $('<p>').text(`hi: ${toF(response.main.temp_max)}`);
     minTemp = $('<p>').text(`lo: ${toF(response.main.temp_min)}`);
     humidity = $('<p>').text(`humidity: ${response.main.humidity}%`);
