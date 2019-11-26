@@ -173,7 +173,8 @@ svg {
     width:33.33%;
 }
 .fiveDay #fiveDayOption, .recentHistory #recentOption, .current #currentOption {
-    background:blue;
+    background:black;
+    color:#888;
 }
 .clearfix:after {
     content:'';
